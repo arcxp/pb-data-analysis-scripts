@@ -42,3 +42,10 @@ This script does NOT have csv export option.
 #### `all-page-urls`
 Lists all published pages with their URIs.
 Note: Only pages listed in this scripts output, templates are powered by dynamic URL patterns from resolvers which are not included in this script's output.
+
+### `find-pages-by-uri`
+List all pages with URI containing the provided filter.
+
+### `describe-page-or-template`
+Describes contents of a page or template by it's id provided by `-i` argument.
+This script shows meta data of this page (uri, title), list of features, sorted by how many times used in the page/template, and the content sources configured from features.
