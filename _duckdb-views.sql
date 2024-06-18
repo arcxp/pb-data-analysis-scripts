@@ -65,7 +65,6 @@ FROM read_json_auto(
   ignore_errors=true
 );
 
-
 -- Resolver view
 CREATE VIEW view_resolver AS
 SELECT * FROM read_json_auto(

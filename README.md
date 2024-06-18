@@ -25,3 +25,11 @@ produces list of all features used in your pb-data (not bundle), in published pa
 requires `-n` parameter with a feature name that will print list of pages and templates which uses this feature.
 
 You can open pagebuilder editor with the following url template with the page or template id in the query string: `https://YOURORG.arcpublishing.com/pagebuilder/editor/curate?p=PAGEID`
+
+#### `all-content-sources-usage`
+List of all content sources, from both global content source configurations (from resolvers) and feature configurations.
+This script does NOT have csv export option.
+
+#### `all-page-urls`
+Lists all published pages with their URIs.
+Note: Only pages listed in this scripts output, templates are powered by dynamic URL patterns from resolvers which are not included in this script's output.
