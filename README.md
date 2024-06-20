@@ -12,10 +12,12 @@ Reiterated from license above, all code in this example is free to use, and as s
 Notes:
 - pb-data is a database snapshot of PageBuilder data, taken every 12 hours.
 
+
 ## Requirements
 
 - Mongodb Tools: https://www.mongodb.com/docs/database-tools/installation/installation-macos/
 - Duckdb CLI https://duckdb.org/docs/api/cli/overview.html#installation
+
 
 ## How to use
 
@@ -24,6 +26,14 @@ Notes:
 3. Unzip the downloaded tar file, and rename the folder as `pb-data` and place it in this projects root folder.
 4. Run `sh _prepare.sh` command to create temp database file (duckdb file) that contains the simplified views that is used in different shell scripts. These views are not copying the actual data, they are just views referring to the actual JSON files converted from mongodb bson files.
 5. Run any of the shell script. These scripts are plain and simple, you can read the code to understand what the parameters, or add `-h` argument to the scripts to see help text for each one of them (i.e: `sh find-pages-by-feature-name.sh -h`)
+
+
+## Video Tutorial
+
+[![Video Tutorial](https://img.youtube.com/vi/Sy3FjQv73VM/0.jpg)](https://www.youtube.com/watch?v=Sy3FjQv73VM)
+
+The video and tutorial can be found in "[How to check feature/content-source usage using pb-data analysis scripts](https://docs.arcxp.com/alc/en/how-to-check-feature-content-source-usage-using-pb-data-analysis-scripts?id=kb_article_view&sys_kb_id=b5ee6257c3f2ca50a046930a05013129#mcetoc_1i0qpofi99f)" ALC documentation.
+
 
 ## Scripts
 
