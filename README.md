@@ -51,7 +51,7 @@ This script does NOT have csv export option.
 
 #### `all-page-urls`
 Lists all published pages with their URIs.
-Note: Only pages listed in this scripts output, templates are powered by dynamic URL patterns from resolvers which are not included in this script's output.
+Note: This script lists only pages and not templates. Templates are powered by dynamic URL patterns from resolvers and are not included in this script's output.
 
 ### `find-pages-by-uri`
 List all pages with URI containing the provided filter.
