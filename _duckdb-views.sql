@@ -1,41 +1,79 @@
 -- Simplified and flattened rendering collection view
 CREATE VIEW view_rendering AS
-SELECT
-  renderingVersionId,
-  layout,
-  chainName,
-  chainDisplayName,
-  featureConfig as featureName,
-  displayName as featureDisplayName,
-  featureConfig as featureId,
-  contentService,
-  contentConfigValues
-FROM (
+WITH FlattenedLayoutItems AS (
   SELECT
-    renderingVersionId,
+    _version as renderingVersionId,
     layout,
-    featureConfig as chainName,
-    displayName as chainDisplayName,
-    unnest(features, recursive := true)
-  FROM (
+    unnest(layoutItems, recursive := true) as renderableItem
+  FROM read_json_auto(
+    'pb-data/rendering.json',
+    format = 'newline_delimited',
+    ignore_errors=true
+  )
+),
+RenderableItems AS (
+  SELECT * FROM (
     SELECT
       renderingVersionId,
       layout,
       unnest(renderableItems, recursive := true)
-    FROM (
-      SELECT
-        _version as renderingVersionId,
-        layout,
-        unnest(layoutItems, recursive := true)
-      FROM read_json_auto(
-        'pb-data/rendering.json',
-        format = 'newline_delimited',
-        ignore_errors=true
-      )
-    )
+    FROM FlattenedLayoutItems
   )
-);
-
+),
+FeaturesFromRenderableItems AS (
+  SELECT
+    renderingVersionId,
+    layout,
+    '' as chainName,
+    '' as chainDisplayName,
+    featureConfig as featureName,
+    displayName as featureDisplayName,
+    contentService,
+    contentConfigValues
+  FROM (
+    SELECT * FROM RenderableItems
+    WHERE className LIKE '%.rendering.Feature'
+  )
+),
+ChainsFromRenderableItems AS (
+  SELECT
+      renderingVersionId,
+      layout,
+      chainConfig as chainName,
+      displayName as chainDisplayName,
+      features
+    FROM RenderableItems
+    WHERE className LIKE '%.rendering.Chain'
+),
+FeaturesFromChains AS (
+  SELECT
+    renderingVersionId,
+    layout,
+    chainName,
+    chainDisplayName,
+    featureConfig as featureName,
+    displayName  as featureDisplayName,
+    contentService,
+    contentConfigValues
+  FROM (
+    SELECT
+      renderingVersionId,
+      layout,
+      chainName,
+      chainDisplayName,
+      unnest(features, recursive := true)
+    FROM ChainsFromRenderableItems
+  )
+),
+FlattenedAllFeatures AS (
+  SELECT *
+  FROM (
+    SELECT * FROM FeaturesFromRenderableItems
+    UNION ALL
+    SELECT * FROM FeaturesFromChains
+  )
+)
+SELECT * FROM FlattenedAllFeatures;
 
 -- Pages and templates combined view
 CREATE VIEW view_page_and_template AS
