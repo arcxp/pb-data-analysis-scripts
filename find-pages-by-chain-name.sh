@@ -1,12 +1,16 @@
 #!/bin/bash
 
+# Get the options
+Name=""
 Csv=False
 while getopts ":hn:c" option; do
   case $option in
+    n) # Enter a name
+      Name=$OPTARG;;
     c) # CSV output
       Csv=True;;
     h) # Help message
-      echo "Usage: $0 [-c]"
+      echo "Usage: $0 -n name [-c]"
       echo "  -c for CSV output you can pipe to a file"
       exit 0;;
     \?) # Invalid option
@@ -14,19 +18,20 @@ while getopts ":hn:c" option; do
       exit 1;;
   esac
 done
+# Check if the name is at least 2 characters long
+if [[ -z "$Name" || ${#Name} -lt 2 ]]; then
+  echo "Error: A chain name with at least 2 characters is required."
+  exit 1
+fi
 
-QUERY="SELECT * FROM (
-  SELECT
-    featureName,
-    COUNT(1) as countOfTimesUsed,
-    COUNT(DISTINCT pageOrTemplateId) as countOfPagesOrTemplatesUsing
+QUERY="SELECT * FROM view_page_and_template
+WHERE pageOrTemplateId IN (
+  SELECT DISTINCT pageOrTemplateId
   FROM view_rendering
   LEFT JOIN view_page_and_template ON view_page_and_template.published = view_rendering.renderingVersionId
   WHERE pageOrTemplateId IS NOT NULL
-    AND featureName != ''
-  GROUP BY featureName
-)
-ORDER BY countOfPagesOrTemplatesUsing DESC"
+    AND chainName = '${Name}'
+)"
 
 if [[ $Csv == "True" ]]; then
   QUERY="COPY ($QUERY) TO STDOUT WITH (FORMAT CSV, HEADER);"
@@ -34,7 +39,7 @@ else
   # Print the header
   YELLOW='\033[0;33m'
   RESET='\033[0m'
-  echo "${YELLOW}\n--- All features used in published pages, sorted by most used first ---\n${RESET}"
+  echo "${YELLOW}\n--- All published pages using chain: ${Name} ---\n${RESET}"
 fi
 
 duckdb _tmpview.db "$QUERY"

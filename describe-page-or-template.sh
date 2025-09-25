@@ -30,15 +30,30 @@ echo "${YELLOW}\n--- Page or Temoplate: #${PageOrTemplateId} ---\n${RESET}"
 duckdb _tmpview.db "SELECT * FROM view_page_and_template WHERE pageOrTemplateId = '$PageOrTemplateId'"
 
 
+## Print Chains ---------------------
+echo "${YELLOW}\n--- All chains used in: #${PageOrTemplateId} ---\n${RESET}"
+duckdb _tmpview.db "SELECT * FROM (
+  SELECT
+    chainName,
+    COUNT(DISTINCT featureName) as countOfTimesUsed
+  FROM view_rendering
+  INNER JOIN view_page_and_template ON view_page_and_template.published = view_rendering.renderingVersionId
+    AND view_page_and_template.pageOrTemplateId = '$PageOrTemplateId'
+  WHERE chainName != ''
+  GROUP BY chainName
+)
+ORDER BY countOfTimesUsed DESC"
+
 ## Print Features ---------------------
 echo "${YELLOW}\n--- All features used in: #${PageOrTemplateId} ---\n${RESET}"
 duckdb _tmpview.db "SELECT * FROM (
   SELECT
     featureName,
-    COUNT(1) as countOfTimesUsed
+    COUNT(DISTINCT CONCAT(COALESCE(chainName, ''), '|', layout, '|', COALESCE(contentService, ''))) as countOfTimesUsed
   FROM view_rendering
-  LEFT JOIN view_page_and_template ON view_page_and_template.published = view_rendering.renderingVersionId
-  WHERE pageOrTemplateId = '$PageOrTemplateId'
+  INNER JOIN view_page_and_template ON view_page_and_template.published = view_rendering.renderingVersionId
+    AND view_page_and_template.pageOrTemplateId = '$PageOrTemplateId'
+  WHERE featureName != ''
   GROUP BY featureName
 )
 ORDER BY countOfTimesUsed DESC"
@@ -50,11 +65,11 @@ duckdb _tmpview.db "SELECT * FROM (
   SELECT
     featureName,
     contentService,
-    COUNT(1) as countOfTimesUsed
+    COUNT(DISTINCT CONCAT(COALESCE(chainName, ''), '|', layout)) as countOfTimesUsed
   FROM view_rendering
-  LEFT JOIN view_page_and_template ON view_page_and_template.published = view_rendering.renderingVersionId
-  WHERE pageOrTemplateId = '$PageOrTemplateId'
-    AND contentService != ''
+  INNER JOIN view_page_and_template ON view_page_and_template.published = view_rendering.renderingVersionId
+    AND view_page_and_template.pageOrTemplateId = '$PageOrTemplateId'
+  WHERE contentService != '' AND featureName != ''
   GROUP BY contentService, featureName
 )
 ORDER BY countOfTimesUsed DESC"

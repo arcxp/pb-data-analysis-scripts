@@ -27,7 +27,6 @@ Notes:
 4. Run `sh _prepare.sh` command to create temp database file (duckdb file) that contains the simplified views that is used in different shell scripts. These views are not copying the actual data, they are just views referring to the actual JSON files converted from mongodb bson files.
 5. Run any of the shell script. These scripts are plain and simple, you can read the code to understand what the parameters, or add `-h` argument to the scripts to see help text for each one of them (i.e: `sh find-pages-by-feature-name.sh -h`)
 
-
 ## Video Tutorial
 
 [![Video Tutorial](https://img.youtube.com/vi/Sy3FjQv73VM/0.jpg)](https://www.youtube.com/watch?v=Sy3FjQv73VM)
@@ -37,25 +36,51 @@ The video and tutorial can be found in "[How to check feature/content-source usa
 
 ## Scripts
 
-#### `all-features-usage`
-produces list of all features used in your pb-data (not bundle), in published pages and templates along with how many pages they are used in and the number of times (instances) they are used in these pages.
+### `all-chains-usage.sh [-c]`
+Produces list of all chains used in your pb-data (not bundle), in published pages and templates along with how many pages they are used in and the number of times (instances) they are used in these pages.
 
-#### `find-pages-by-feature-name`
-requires `-n` parameter with a feature name that will print list of pages and templates which uses this feature.
+`-c` Output in CSV format
 
+### `all-features-usage.sh [-c]`
+Produces list of all features used in your pb-data (not bundle), in published pages and templates along with how many pages they are used in and the number of times (instances) they are used in these pages.
+
+`-c` Output in CSV format
+
+### `find-pages-by-chain-name.sh -n <chain_name> [-c]`
+Produces list of pages and templates which uses a specific chain.
 You can open pagebuilder editor with the following url template with the page or template id in the query string: `https://YOURORG.arcpublishing.com/pagebuilder/editor/curate?p=PAGEID`
 
-#### `all-content-sources-usage`
+`-n` Chain name (required, min 2 characters)
+
+`-c` Output in CSV format
+
+### `find-pages-by-feature-name.sh -n <feature_name> [-c]`
+Produces list of pages and templates which uses a specific feature.
+You can open pagebuilder editor with the following url template with the page or template id in the query string: `https://YOURORG.arcpublishing.com/pagebuilder/editor/curate?p=PAGEID`
+
+`-n` Feature name (required, min 2 characters)
+
+`-c` Output in CSV format
+
+### `all-content-sources-usage.sh`
 List of all content sources, from both global content source configurations (from resolvers) and feature configurations.
-This script does NOT have csv export option.
+Note: This script does NOT have CSV output option.
 
-#### `all-page-urls`
-Lists all published pages with their URIs.
-Note: This script lists only pages and not templates. Templates are powered by dynamic URL patterns from resolvers and are not included in this script's output.
+### `all-page-urls.sh [-c]`
+Excludes templates, as they are powered by dynamic URL patterns from resolvers and are not included in this script's output.
 
-### `find-pages-by-uri`
-List all pages with URI containing the provided filter.
+`-c` Output in CSV format
 
-### `describe-page-or-template`
-Describes contents of a page or template by it's id provided by `-i` argument.
-This script shows meta data of this page (uri, title), list of features, sorted by how many times used in the page/template, and the content sources configured from features.
+### `find-pages-by-uri.sh -u <uri_filter> [-c]`
+List all pages matching URI containing the provided filter.
+
+`-u` URI filter (required, min 2 characters)
+
+`-c` Output in CSV format
+
+### `describe-page-or-template.sh -i <page_or_template_id> [-c]`
+This script shows meta data of this page (uri, title), list of chains & features, sorted by how many times used in the page/template, and the content sources configured from features.
+
+`-i` Page or Template ID (required, min 2 characters)
+
+`-c` Output in CSV format
