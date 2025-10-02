@@ -6,8 +6,7 @@ while getopts ":hn:c" option; do
     c) # CSV output
       Csv=True;;
     h) # Help message
-      echo "Usage: $0 [-c]"
-      echo "  -c for CSV output you can pipe to a file"
+      echo "Usage: $0"
       exit 0;;
     \?) # Invalid option
       echo "Error: Invalid option"
@@ -35,12 +34,11 @@ duckdb _tmpview.db "SELECT * FROM (
   SELECT
     featureName,
     contentService,
-    COUNT(1) as countOfTimesUsed,
     COUNT(DISTINCT pageOrTemplateId) as countOfPagesOrTemplatesUsing
   FROM view_rendering
-  LEFT JOIN view_page_and_template ON view_page_and_template.published = view_rendering.renderingVersionId
-  WHERE pageOrTemplateId IS NOT NULL
+  INNER JOIN view_page_and_template ON view_page_and_template.published = view_rendering.renderingVersionId
     AND contentService != ''
+  WHERE pageOrTemplateId IS NOT NULL
   GROUP BY contentService, featureName
 )
 ORDER BY countOfPagesOrTemplatesUsing DESC"
