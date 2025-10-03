@@ -2,5 +2,9 @@
 .DS_Store
 pb-data*
 bundle*
+_debug.sh
+_debug.sql
+_debug.csv
 _tmpview.db
 test*
+*.csv

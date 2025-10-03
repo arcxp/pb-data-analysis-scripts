@@ -20,23 +20,29 @@ while getopts ":hn:c" option; do
 done
 # Check if the name is at least 2 characters long
 if [[ -z "$Name" || ${#Name} -lt 2 ]]; then
-  echo "Error: A feature name with at least 2 characters is required."
+  echo "Error: A content source name with at least 2 characters is required."
   exit 1
 fi
 
-QUERY="SELECT * FROM view_page_and_template
-WHERE pageOrTemplateId IN (
-  SELECT DISTINCT pageOrTemplateId
-  FROM view_rendering
-  LEFT JOIN view_page_and_template ON view_page_and_template.published = view_rendering.renderingVersionId
-  WHERE pageOrTemplateId IS NOT NULL
-    AND featureName = '${Name}'
-)
+QUERY="SELECT
+  pageOrTemplateId,
+  isPageOrTemplate,
+  uri,
+  name,
+  featureName,
+  featureDisplayName,
+  contentService
+FROM view_rendering
+LEFT JOIN view_page_and_template
+  ON view_page_and_template.published = view_rendering.renderingVersionId
+WHERE contentService LIKE '%${Name}%'
+  AND featureName != ''
+	AND renderingVersionId IS NOT NULL
 ORDER BY
-  view_page_and_template.isPageOrTemplate ASC,
-  view_page_and_template.pageOrTemplateId ASC,
-  view_page_and_template.uri ASC,
-  view_page_and_template.name ASC"
+  isPageOrTemplate ASC,
+  pageOrTemplateId ASC,
+  uri ASC,
+  name ASC"
 
 if [[ $Csv == "True" ]]; then
   QUERY="COPY ($QUERY) TO STDOUT WITH (FORMAT CSV, HEADER);"
@@ -44,7 +50,7 @@ else
   # Print the header
   YELLOW='\033[0;33m'
   RESET='\033[0m'
-  echo "${YELLOW}\n--- All published pages using feature: ${Name} ---\n${RESET}"
+  echo "${YELLOW}\n--- All features in published pages, using content source: ${Name} ---\n${RESET}"
 fi
 
 duckdb _tmpview.db "$QUERY"

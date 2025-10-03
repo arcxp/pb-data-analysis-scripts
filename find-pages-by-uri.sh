@@ -10,7 +10,7 @@ while getopts ":hu:c" option; do
     c) # CSV output
       Csv=True;;
     h) # Help message
-      echo "Usage: $0 -n name [-c]"
+      echo "Usage: $0 -u uri [-c]"
       echo "  -c for CSV output you can pipe to a file"
       exit 0;;
     \?) # Invalid option
@@ -25,7 +25,11 @@ if [[ -z "$UrlFilter" || ${#UrlFilter} -lt 2 ]]; then
 fi
 
 QUERY="SELECT * FROM view_page_and_template
-WHERE uri LIKE '%$UrlFilter%'"
+WHERE uri LIKE '%$UrlFilter%'
+ORDER BY
+  view_page_and_template.isPageOrTemplate ASC,
+  view_page_and_template.uri ASC,
+  view_page_and_template.name ASC"
 
 if [[ $Csv == "True" ]]; then
   QUERY="COPY ($QUERY) TO STDOUT WITH (FORMAT CSV, HEADER);"

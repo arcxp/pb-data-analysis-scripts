@@ -31,7 +31,12 @@ WHERE pageOrTemplateId IN (
   LEFT JOIN view_page_and_template ON view_page_and_template.published = view_rendering.renderingVersionId
   WHERE pageOrTemplateId IS NOT NULL
     AND chainName = '${Name}'
-)"
+)
+ORDER BY
+  view_page_and_template.isPageOrTemplate ASC,
+  view_page_and_template.pageOrTemplateId ASC,
+  view_page_and_template.uri ASC,
+  view_page_and_template.name ASC"
 
 if [[ $Csv == "True" ]]; then
   QUERY="COPY ($QUERY) TO STDOUT WITH (FORMAT CSV, HEADER);"
