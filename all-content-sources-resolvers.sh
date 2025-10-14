@@ -18,16 +18,12 @@ done
 
 QUERY="SELECT * FROM (
   SELECT
-    featureName,
-    contentService,
-    COUNT(DISTINCT pageOrTemplateId) as countOfPagesOrTemplatesUsing
-  FROM view_rendering
-  INNER JOIN view_page_and_template ON view_page_and_template.published = view_rendering.renderingVersionId
-    AND contentService != ''
-  WHERE pageOrTemplateId IS NOT NULL
-  GROUP BY contentService, featureName
+    contentSourceId,
+    COUNT(1) as countOfResolvers
+  FROM view_resolver
+  GROUP BY contentSourceId
 )
-ORDER BY countOfPagesOrTemplatesUsing DESC"
+ORDER BY countOfResolvers DESC"
 
 if [[ $Csv == "True" ]]; then
   QUERY="COPY ($QUERY) TO STDOUT WITH (FORMAT CSV, HEADER);"
@@ -35,7 +31,7 @@ else
   # Print the header
   YELLOW='\033[0;33m'
   RESET='\033[0m'
-  echo "${YELLOW}\n--- Content sources in feature configuration is pages and templates ---\n${RESET}"
+  echo "${YELLOW}\n--- Global content sources in resolvers ---\n${RESET}"
 fi
 
 duckdb _tmpview.db "$QUERY"

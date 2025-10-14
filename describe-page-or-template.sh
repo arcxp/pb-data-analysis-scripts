@@ -7,8 +7,7 @@ while getopts ":hi:" option; do
     i) # Enter an ID
       PageOrTemplateId=$OPTARG;;
     h) # Help message
-      echo "Usage: $0 -n name [-c]"
-      echo "  -c for CSV output you can pipe to a file"
+      echo "Usage: $0 -i page_or_template_id"
       exit 0;;
     \?) # Invalid option
       echo "Error: Invalid option"
@@ -42,7 +41,7 @@ duckdb _tmpview.db "SELECT * FROM (
   WHERE chainName != ''
   GROUP BY chainName
 )
-ORDER BY countOfTimesUsed DESC"
+ORDER BY chainName ASC"
 
 ## Print Features ---------------------
 echo "${YELLOW}\n--- All features used in: #${PageOrTemplateId} ---\n${RESET}"
@@ -56,7 +55,7 @@ duckdb _tmpview.db "SELECT * FROM (
   WHERE featureName != ''
   GROUP BY featureName
 )
-ORDER BY countOfTimesUsed DESC"
+ORDER BY featureName ASC"
 
 
 ## Print Content Sources ---------------------
@@ -72,4 +71,4 @@ duckdb _tmpview.db "SELECT * FROM (
   WHERE contentService != '' AND featureName != ''
   GROUP BY contentService, featureName
 )
-ORDER BY countOfTimesUsed DESC"
+ORDER BY featureName ASC"

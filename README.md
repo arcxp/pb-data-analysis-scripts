@@ -36,17 +36,19 @@ The video and tutorial can be found in "[How to check feature/content-source usa
 
 ## Scripts
 
-### `all-chains-usage.sh [-c]`
+In terminal, view the below script help with command `sh help.sh`
+
+### 📄 `describe-page-or-template.sh -i <page_or_template_id>`
+This script shows meta data of this page (uri, title), list of chains & features, sorted by how many times used in the page/template, and the content sources configured from features.
+
+`-i` Page or Template ID (required, min 2 characters)
+
+### 📁 `all-chains-usage.sh [-c]`
 Produces list of all chains used in your pb-data (not bundle), in published pages and templates along with how many pages they are used in and the number of times (instances) they are used in these pages.
 
 `-c` Output in CSV format
 
-### `all-features-usage.sh [-c]`
-Produces list of all features used in your pb-data (not bundle), in published pages and templates along with how many pages they are used in and the number of times (instances) they are used in these pages.
-
-`-c` Output in CSV format
-
-### `find-pages-by-chain-name.sh -n <chain_name> [-c]`
+### 🔍 `find-pages-by-chain-name.sh -n <chain_name> [-c]`
 Produces list of pages and templates which uses a specific chain.
 You can open pagebuilder editor with the following url template with the page or template id in the query string: `https://YOURORG.arcpublishing.com/pagebuilder/editor/curate?p=PAGEID`
 
@@ -54,7 +56,12 @@ You can open pagebuilder editor with the following url template with the page or
 
 `-c` Output in CSV format
 
-### `find-pages-by-feature-name.sh -n <feature_name> [-c]`
+### 📁 `all-features-usage.sh [-c]`
+Produces list of all features used in your pb-data (not bundle), in published pages and templates along with how many pages they are used in and the number of times (instances) they are used in these pages.
+
+`-c` Output in CSV format
+
+### 🔍 `find-pages-by-feature-name.sh -n <feature_name> [-c]`
 Produces list of pages and templates which uses a specific feature.
 You can open pagebuilder editor with the following url template with the page or template id in the query string: `https://YOURORG.arcpublishing.com/pagebuilder/editor/curate?p=PAGEID`
 
@@ -62,25 +69,53 @@ You can open pagebuilder editor with the following url template with the page or
 
 `-c` Output in CSV format
 
-### `all-content-sources-usage.sh`
-List of all content sources, from both global content source configurations (from resolvers) and feature configurations.
-Note: This script does NOT have CSV output option.
+### 📁 `all-content-sources-usage.sh`
+List of all content sources, from feature block configurations.
 
-### `all-page-urls.sh [-c]`
+`-c` Output in CSV format
+
+### 🔍 `find-features-by-content-source.sh -n <content_source> [-c]`
+Produces list of features which uses a specific content source name (like match)
+
+`-n` Content source filter (required, min 2 characters)
+
+`-c` Output in CSV format
+
+### 📁 `all-content-sources-resolvers.sh [-c]`
+List of all content sources, from route resolver configurations.
+
+`-c` Output in CSV format
+
+### 🔍 `find-resolvers-by-content-source.sh -n <content_source> [-c]`
+Produces list of resolvers which uses a specific content source name (exact match)
+
+`-n` Content source name (required, min 2 characters)
+
+`-c` Output in CSV format
+
+### 📁 `all-page-urls.sh [-c]`
 Excludes templates, as they are powered by dynamic URL patterns from resolvers and are not included in this script's output.
 
 `-c` Output in CSV format
 
-### `find-pages-by-uri.sh -u <uri_filter> [-c]`
+### 🔍 `find-pages-by-uri.sh -u <uri_filter> [-c]`
 List all pages matching URI containing the provided filter.
 
 `-u` URI filter (required, min 2 characters)
 
 `-c` Output in CSV format
 
-### `describe-page-or-template.sh -i <page_or_template_id> [-c]`
-This script shows meta data of this page (uri, title), list of chains & features, sorted by how many times used in the page/template, and the content sources configured from features.
+### 📦 `view-page-and-template.sh [-c]`
+Select all from view_page_and_template
 
-`-i` Page or Template ID (required, min 2 characters)
+`-c` Output in CSV format
+
+### 📦 `view-rendering.sh [-c]`
+Select all from view_rendering
+
+`-c` Output in CSV format
+
+### 📦 `view-resolver.sh [-c]`
+Select all from view_resolver
 
 `-c` Output in CSV format
