@@ -119,3 +119,21 @@ Select all from view_rendering
 Select all from view_resolver
 
 `-c` Output in CSV format
+
+
+# Updates
+
+- **Aug 29, 2024:** A fix has been published that addresses an issue where some features (at the top level of the curation layout) not being included in the `all-features-usage.sh` script. To update, please pull code from master branch to your local working copy, then run `sh _prepare.sh` to re-create your local views.
+- **Oct 2, 2025:** New scripts and bugfixes from our friends at The Globe and Mail team ([PR#2](https://github.com/arcxp/pb-data-analysis-scripts/pull/2)).
+  - New help.sh (lists available scripts with short descriptions) and gui.sh to open duck db GUI in the browser to explore the data set.
+  - New `all-chains-usage.sh` and `find-pages-by-chain-name.sh` scripts to analyze chains usage.
+  - Fix content source usage script.
+- **Oct 14, 2025:** Another amazing update from our friends at The Globe and Mail team, introducing new scripts and improvements ([PR#3](https://github.com/arcxp/pb-data-analysis-scripts/pull/3)):
+  - **New analysis scripts**: Added 5 new scripts for content source analysis (`find-features-by-content-source.sh`, `find-resolvers-by-content-source.sh`) and debugging views (`view-page-or-template.sh`, `view-rendering.sh`, `view-resolver.sh`), all with CSV export support.
+  - **Performance improvements**: Major optimization reduced rendering items (95%+ reduction) by filtering to published versions only and latest renderings, greatly improving query execution speed.
+  - **Enhanced usability**: Updated scripts now include better ordering, feature/chain fingerprint columns for easier PB Editor identification, and improved content source detection from customFields with support for multi-service configurations.
+
+
+# License
+- [MIT License](LICENSE)
+- NO WARRANTY, SLA or SUPPORT
